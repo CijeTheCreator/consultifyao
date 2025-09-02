@@ -3,14 +3,146 @@ sidebar_position: 1
 ---
 
 # Orchestrator Process
-<!-- Process Id here wrapped in ``, leave a placeholder as it is not available at the time of writing -->
-<!-- 2 sentence intro -->
+`Process ID: {placeholder}`
 
-<!-- For each of the handlers in the process -->
-  ## Handler Name
-  <!-- 1 sentence intro -->
-  <!-- A markdown table with the columns below. -->
-  <!-- | Tag | Type | Required | Description | -->
-  <!-- | --------------- | --------------- | --------------- | --------------- | -->
-  <!-- The description should have a max of 25 words. 2 sentences max. -->
-  <!-- An example ao.send({}) request of that handler in a lua code block -->
+The orchestrator process manages user registration, consultation coordination, doctor assignments, and payment processing. It serves as the central hub that coordinates interactions between patients, doctors, and other specialized processes.
+
+## Setup
+Initializes the orchestrator process with required parameters.
+
+| Tag | Type | Required | Description |
+| --------------- | --------------- | --------------- | --------------- |
+| USD_TOKEN | string | Yes | Token contract address for payments |
+
+```lua
+ao.send({
+  Target = "{ORCHESTRATOR_PROCESS_ID}",
+  Action = "Setup",
+  Tags = {
+    USD_TOKEN = "token_contract_address_here"
+  }
+})
+```
+
+## RegisterPatient
+Registers a new patient in the system.
+
+| Tag | Type | Required | Description |
+| --------------- | --------------- | --------------- | --------------- |
+| PreferredLanguage | string | Yes | Patient's preferred language code (en, es, fr, etc.) |
+
+```lua
+ao.send({
+  Target = "{ORCHESTRATOR_PROCESS_ID}",
+  Action = "RegisterPatient",
+  Tags = {
+    PreferredLanguage = "en"
+  }
+})
+```
+
+## RegisterDoctor
+Registers a new doctor with specialty and stake information.
+
+| Tag | Type | Required | Description |
+| --------------- | --------------- | --------------- | --------------- |
+| SpecialtyType | string | Yes | Medical specialty (General Medicine, Cardiology, etc.) |
+| PreferredLanguage | string | Yes | Doctor's preferred language code |
+| Stake | number | Yes | Minimum stake amount required |
+
+```lua
+ao.send({
+  Target = "{ORCHESTRATOR_PROCESS_ID}",
+  Action = "RegisterDoctor",
+  Tags = {
+    SpecialtyType = "General Medicine",
+    PreferredLanguage = "en",
+    Stake = "10"
+  }
+})
+```
+
+## RequestConsultation
+Initiates a new consultation session for a patient.
+
+| Tag | Type | Required | Description |
+| --------------- | --------------- | --------------- | --------------- |
+| - | - | - | No additional tags required |
+
+```lua
+ao.send({
+  Target = "{ORCHESTRATOR_PROCESS_ID}",
+  Action = "RequestConsultation"
+})
+```
+
+## RequestDoctorAssignment
+Assigns a doctor to an active consultation based on specialty requirements.
+
+| Tag | Type | Required | Description |
+| --------------- | --------------- | --------------- | --------------- |
+| ConsultationId | string | Yes | ID of the consultation requiring doctor assignment |
+| DoctorSpecialty | string | Yes | Required medical specialty for the consultation |
+| TriageSummary | string | Yes | Summary of patient's condition from triage |
+
+```lua
+ao.send({
+  Target = "{ORCHESTRATOR_PROCESS_ID}",
+  Action = "RequestDoctorAssignment",
+  Tags = {
+    ConsultationId = "consultation_process_id",
+    DoctorSpecialty = "Cardiology",
+    TriageSummary = "Patient experiencing chest pain"
+  }
+})
+```
+
+## AddNotification
+Adds a notification message for a specific user.
+
+| Tag | Type | Required | Description |
+| --------------- | --------------- | --------------- | --------------- |
+| Recipient | string | Yes | User ID who will receive the notification |
+| Timestamp | number | Yes | Unix timestamp when notification was created |
+| JSONMetadata | string | No | Additional metadata in JSON format |
+
+```lua
+ao.send({
+  Target = "{ORCHESTRATOR_PROCESS_ID}",
+  Action = "AddNotification",
+  Data = "Your consultation has been scheduled",
+  Tags = {
+    Recipient = "patient_id",
+    Timestamp = "1234567890",
+    JSONMetadata = "{}"
+  }
+})
+```
+
+## GetNotifications
+Retrieves all notifications for the requesting user.
+
+| Tag | Type | Required | Description |
+| --------------- | --------------- | --------------- | --------------- |
+| - | - | - | No additional tags required |
+
+```lua
+ao.send({
+  Target = "{ORCHESTRATOR_PROCESS_ID}",
+  Action = "GetNotifications"
+})
+```
+
+## GetConsultations
+Retrieves consultation history for the requesting user.
+
+| Tag | Type | Required | Description |
+| --------------- | --------------- | --------------- | --------------- |
+| - | - | - | No additional tags required |
+
+```lua
+ao.send({
+  Target = "{ORCHESTRATOR_PROCESS_ID}",
+  Action = "GetConsultations"
+})
+```

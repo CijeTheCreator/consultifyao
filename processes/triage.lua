@@ -1,5 +1,5 @@
 APUS_ROUTER = "APUS router address here"
-REGISTRATIION_PROCESS = "ur8IRjSbYqAmBK1cvCTYeV_YJ4SkOMTGOc58SIcpZ9w"
+ORCHESTRATOR_PROCESS = "ur8IRjSbYqAmBK1cvCTYeV_YJ4SkOMTGOc58SIcpZ9w"
 HAS_SETUP = false
 TrackingData = TrackingData or {}
 DoctorAssignments = TrackingData or {}
@@ -129,11 +129,11 @@ Handlers.add("Setup", { Action = "Setup" }, function(msg)
 	if not msg.Tags.APUS_ROUTER then
 		msg.reply({ Data = "Setup Error: Missing setup data in tags" })
 	end
-	if not msg.Tags.REGISTRATION_PROCESS then
-		msg.reply({ Data = "Setup Error: Missing registration process in tags" })
+	if not msg.Tags.ORCHESTRATOR_PROCESS then
+		msg.reply({ Data = "Setup Error: Missing orchestrator process in tags" })
 	end
 	APUS_ROUTER = msg.Tags.APUS_ROUTER
-	REGISTRATION_PROCESS = msg.Tags.REGISTRATION_PROCESS
+	ORCHESTRATOR_PROCESS = msg.Tags.ORCHESTRATOR_PROCESS
 	HAS_SETUP = true
 	msg.reply({ Data = "Setup Babel Successfully" })
 end)
@@ -226,7 +226,7 @@ Handlers.add("AcceptInfer", { Action = "Infer-Response" }, function(msg)
 			TranslatedLanguage = tracking.TargetLanguage,
 		}
 		local request = {
-			Target = REGISTRATIION_PROCESS,
+			Target = ORCHESTRATOR_PROCESS,
 			Action = "RequestDoctorAssignment",
 			Tags = tags,
 		}

@@ -3,14 +3,66 @@ sidebar_position: 4
 ---
 
 # Babel Process
-<!-- Process Id here wrapped in ``, leave a placeholder as it is not available at the time of writing -->
-<!-- 2 sentence intro -->
+`Process ID: {placeholder}`
 
-<!-- For each of the handlers in the process -->
-  ## Handler Name
-  <!-- 1 sentence intro -->
-  <!-- A markdown table with the columns below. -->
-  <!-- | Tag | Type | Required | Description | -->
-  <!-- | --------------- | --------------- | --------------- | --------------- | -->
-  <!-- The description should have a max of 25 words. 2 sentences max. -->
-  <!-- An example ao.send({}) request of that handler in a lua code block -->
+The babel process provides AI-powered translation services for medical consultations. It supports 8 languages and ensures accurate medical communication between patients and doctors who speak different languages.
+
+## Setup
+Initializes the babel process with the AI inference router.
+
+| Tag | Type | Required | Description |
+| --------------- | --------------- | --------------- | --------------- |
+| APUS_ROUTER | string | Yes | AI inference router process ID for translations |
+
+```lua
+ao.send({
+  Target = "{BABEL_PROCESS_ID}",
+  Action = "Setup",
+  Tags = {
+    APUS_ROUTER = "ai_router_process_id"
+  }
+})
+```
+
+## ProcessBabelResponse
+Initiates translation request for medical consultation messages.
+
+| Tag | Type | Required | Description |
+| --------------- | --------------- | --------------- | --------------- |
+| ConsultationID | string | Yes | ID of consultation requiring translation |
+| SenderID | string | Yes | ID of message sender |
+| TargetLanguage | string | Yes | Target language code for translation |
+| SourceLanguage | string | Yes | Source language of original content |
+| SourceContent | string | Yes | Text content to be translated |
+
+```lua
+ao.send({
+  Target = "{BABEL_PROCESS_ID}",
+  Action = "ProcessBabelResponse",
+  Tags = {
+    ConsultationID = "consultation_process_id",
+    SenderID = "patient_id",
+    TargetLanguage = "es",
+    SourceLanguage = "en",
+    SourceContent = "I have been experiencing headaches"
+  }
+})
+```
+
+## AcceptInfer
+Processes AI translation responses and forwards translated content to the consultation.
+
+| Tag | Type | Required | Description |
+| --------------- | --------------- | --------------- | --------------- |
+| X-Reference | string | Yes | Reference ID linking response to original translation request |
+
+```lua
+ao.send({
+  Target = "{BABEL_PROCESS_ID}",
+  Action = "Infer-Response",
+  Data = '{"attestation": "proof", "result": "{\\"target-language\\": \\"es\\", \\"target-content\\": \\"He estado experimentando dolores de cabeza\\"}"}',
+  Tags = {
+    ["X-Reference"] = "translation_tracking_id"
+  }
+})
+```

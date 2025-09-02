@@ -14,7 +14,7 @@ Messages = Messages or {}
 DEBUG = nil
 HAS_SETUP = false
 
-REGISTRATION_PROCESS = "ur8IRjSbYqAmBK1cvCTYeV_YJ4SkOMTGOc58SIcpZ9w"
+ORCHESTRATOR_PROCESS = "ur8IRjSbYqAmBK1cvCTYeV_YJ4SkOMTGOc58SIcpZ9w"
 TRIAGE_PROCESS = "lMgy700XJrMr3bmYnScMLok6uItTCSFQBDb_HAEZ-XI"
 BABEL_PROCESS = "_oV0m-XablmsYqkj7w_7WpkV2Qx-1IQ1fTL4LvaW6xQ"
 
@@ -60,7 +60,7 @@ local function notifyUser(recipient, message, json_metadata)
 	}
 
 	local request = {
-		Target = REGISTRATION_PROCESS,
+		Target = ORCHESTRATOR_PROCESS,
 		Action = "AddNotification",
 		Data = message,
 		Tags = tags,
@@ -85,7 +85,7 @@ Handlers.add("Setup", { Action = "Setup" }, function(msg)
 		msg.reply({ Data = "Permission Error: You do not have permissions to interact with this handler" })
 		return
 	end
-	if not msg.Tags.REGISTRATION_PROCESS then
+	if not msg.Tags.ORCHESTRATOR_PROCESS then
 		msg.reply({ Data = "Setup Error: Missing orchestrator process in tags" })
 	end
 	if not msg.Tags.TRIAGE_PROCESS then
@@ -94,7 +94,7 @@ Handlers.add("Setup", { Action = "Setup" }, function(msg)
 	if not msg.Tags.BABEL_PROCESS then
 		msg.reply({ Data = "Setup Error: Missing babel process in tags" })
 	end
-	REGISTRATIION_PROCESS = msg.Tags.REGISTRATION_PROCESS
+	ORCHESTRATOR_PROCESS = msg.Tags.ORCHESTRATOR_PROCESS
 	TRIAGE_PROCESS = msg.Tags.TRIAGE_PROCESS
 	BABEL_PROCESS = msg.Tags.BABEL_PROCESS
 	HAS_SETUP = true
@@ -106,7 +106,7 @@ Handlers.add("CreateConsultation", { Action = "CreateConsultation" }, function(m
 		msg.reply({ Data = "Setup Error: The process has not been setup" })
 		return
 	end
-	if not hasPermissions(msg.From, { REGISTRATIION_PROCESS }) then
+	if not hasPermissions(msg.From, { ORCHESTRATOR_PROCESS }) then
 		msg.reply({ Data = "Permission Error: You do not have permissions to interact with this handler" })
 		return
 	end
@@ -146,7 +146,7 @@ Handlers.add("AddMessage", { Action = "AddMessage" }, function(msg)
 	if
 		not hasPermissions(
 			msg.From,
-			{ REGISTRATIION_PROCESS, TRIAGE_PROCESS, BABEL_PROCESS, Consultation.doctor_id, Consultation.patient_id }
+			{ ORCHESTRATOR_PROCESS, TRIAGE_PROCESS, BABEL_PROCESS, Consultation.doctor_id, Consultation.patient_id }
 		)
 	then
 		msg.reply({ Data = "Permission Error: You do not have permissions to interact with this handler" })
@@ -174,7 +174,7 @@ Handlers.add("UpdateDoctor", { Action = "UpdateDoctor" }, function(msg)
 	if
 		not hasPermissions(
 			msg.From,
-			{ REGISTRATIION_PROCESS, TRIAGE_PROCESS, BABEL_PROCESS, Consultation.doctor_id, Consultation.patient_id }
+			{ ORCHESTRATOR_PROCESS, TRIAGE_PROCESS, BABEL_PROCESS, Consultation.doctor_id, Consultation.patient_id }
 		)
 	then
 		msg.reply({ Data = "Permission Error: You do not have permissions to interact with this handler" })
@@ -199,7 +199,7 @@ Handlers.add("MessageListener", { Action = "Message-Response" }, function(msg)
 	if
 		not hasPermissions(
 			msg.From,
-			{ REGISTRATIION_PROCESS, TRIAGE_PROCESS, BABEL_PROCESS, Consultation.doctor_id, Consultation.patient_id }
+			{ ORCHESTRATOR_PROCESS, TRIAGE_PROCESS, BABEL_PROCESS, Consultation.doctor_id, Consultation.patient_id }
 		)
 	then
 		msg.reply({ Data = "Permission Error: You do not have permissions to interact with this handler" })
@@ -265,7 +265,7 @@ Handlers.add("GetMessages", { Action = "GetMessages" }, function(msg)
 	if
 		not hasPermissions(
 			msg.From,
-			{ REGISTRATIION_PROCESS, TRIAGE_PROCESS, BABEL_PROCESS, Consultation.doctor_id, Consultation.patient_id }
+			{ ORCHESTRATOR_PROCESS, TRIAGE_PROCESS, BABEL_PROCESS, Consultation.doctor_id, Consultation.patient_id }
 		)
 	then
 		msg.reply({ Data = "Permission Error: You do not have permissions to interact with this handler" })
@@ -289,7 +289,7 @@ Handlers.add("GetConsultationDetails", { Action = "GetConsultationDetails" }, fu
 	if
 		not hasPermissions(
 			msg.From,
-			{ REGISTRATIION_PROCESS, TRIAGE_PROCESS, BABEL_PROCESS, Consultation.doctor_id, Consultation.patient_id }
+			{ ORCHESTRATOR_PROCESS, TRIAGE_PROCESS, BABEL_PROCESS, Consultation.doctor_id, Consultation.patient_id }
 		)
 	then
 		msg.reply({ Data = "Permission Error: You do not have permissions to interact with this handler" })

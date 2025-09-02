@@ -3,14 +3,80 @@ sidebar_position: 5
 ---
 
 # Pharmacist Process
-<!-- Process Id here wrapped in ``, leave a placeholder as it is not available at the time of writing -->
-<!-- 2 sentence intro -->
+`Process ID: {placeholder}`
 
-<!-- For each of the handlers in the process -->
-  ## Handler Name
-  <!-- 1 sentence intro -->
-  <!-- A markdown table with the columns below. -->
-  <!-- | Tag | Type | Required | Description | -->
-  <!-- | --------------- | --------------- | --------------- | --------------- | -->
-  <!-- The description should have a max of 25 words. 2 sentences max. -->
-  <!-- An example ao.send({}) request of that handler in a lua code block -->
+The pharmacist process manages prescription tracking and automated medication reminders. It stores prescription data and sends timely notifications to patients based on dosage schedules in multiple languages.
+
+## Setup
+Initializes the pharmacist process with the orchestrator process for notifications.
+
+| Tag | Type | Required | Description |
+| --------------- | --------------- | --------------- | --------------- |
+| ORCHESTRATOR_PROCESS | string | Yes | Orchestrator process ID for sending patient notifications |
+
+```lua
+ao.send({
+  Target = "{PHARMACIST_PROCESS_ID}",
+  Action = "Setup",
+  Tags = {
+    ORCHESTRATOR_PROCESS = "orchestrator_process_id"
+  }
+})
+```
+
+## AddPrescription
+Adds a new prescription with dosage schedule and patient information.
+
+| Tag | Type | Required | Description |
+| --------------- | --------------- | --------------- | --------------- |
+| PatientID | string | Yes | ID of patient receiving prescription |
+| ConsultationID | string | Yes | Consultation where prescription was issued |
+| DrugName | string | Yes | Name of prescribed medication |
+| Frequency | number | Yes | Daily dosage frequency (1=once, 2=twice, etc.) |
+| Start | number | Yes | Start timestamp for prescription |
+| End | number | Yes | End timestamp when prescription expires |
+| PatientLanguage | string | Yes | Patient's language for reminder notifications |
+
+```lua
+ao.send({
+  Target = "{PHARMACIST_PROCESS_ID}",
+  Action = "AddPrescription",
+  Tags = {
+    PatientID = "patient_id",
+    ConsultationID = "consultation_id",
+    DrugName = "Aspirin",
+    Frequency = "2",
+    Start = "1234567890",
+    End = "1235432100",
+    PatientLanguage = "en"
+  }
+})
+```
+
+## SendReminder
+Processes prescription schedules and sends medication reminders to patients when due.
+
+| Tag | Type | Required | Description |
+| --------------- | --------------- | --------------- | --------------- |
+| - | - | - | Uses message timestamp to determine current time |
+
+```lua
+ao.send({
+  Target = "{PHARMACIST_PROCESS_ID}",
+  Action = "SendReminder"
+})
+```
+
+## GetPrescriptions
+Retrieves all prescriptions for the requesting patient.
+
+| Tag | Type | Required | Description |
+| --------------- | --------------- | --------------- | --------------- |
+| - | - | - | No additional tags required |
+
+```lua
+ao.send({
+  Target = "{PHARMACIST_PROCESS_ID}",
+  Action = "GetPrescriptions"
+})
+```

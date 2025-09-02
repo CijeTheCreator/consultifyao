@@ -4,5 +4,4 @@ sidebar_position: 1
 
 # Birds eye view
 
-<!-- 2-4 sentence explanation of the overall architecture -->
-<!-- A picture of the architecture diagram here -->
+Consultify-AO is a decentralized healthcare platform built on the Arweave Object (AO) protocol that enables multilingual medical consultations. The system consists of five interconnected processes: Orchestrator, Triage, Consultation, Babel (translation), and Pharmacist, each handling specific responsibilities in the healthcare workflow. The Registration process acts as the central orchestrator, managing users, payments, and doctor assignments, while specialized processes handle triage assessment, real-time consultations, medical translations, and prescription management.

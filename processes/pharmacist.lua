@@ -2,7 +2,7 @@ local json = require("json")
 
 Prescriptions = Prescriptions or {}
 FollowUpsSent = FollowUpsSent or {}
-REGISTRATIION_PROCESS = "ur8IRjSbYqAmBK1cvCTYeV_YJ4SkOMTGOc58SIcpZ9w"
+ORCHESTRATOR_PROCESS = "ur8IRjSbYqAmBK1cvCTYeV_YJ4SkOMTGOc58SIcpZ9w"
 HAS_SETUP = false
 
 local function hasPermissions(sender, allowed)
@@ -62,10 +62,10 @@ Handlers.add("Setup", { Action = "Setup" }, function(msg)
 		msg.reply({ Data = "Permission Error: You do not have permissions to interact with this handler" })
 		return
 	end
-	if not msg.Tags.REGISTRATION_PROCESS then
+	if not msg.Tags.ORCHESTRATOR_PROCESS then
 		msg.reply({ Data = "Setup Error: Missing orchestrator process in tags" })
 	end
-	REGISTRATIION_PROCESS = msg.Tags.REGISTRATION_PROCESS
+	ORCHESTRATOR_PROCESS = msg.Tags.ORCHESTRATOR_PROCESS
 	msg.reply({ Data = "Setup Pharmacist Successfully" })
 end)
 
@@ -77,7 +77,7 @@ local function notifyUser(recipient, message, json_metadata)
 	}
 
 	local request = {
-		Target = REGISTRATION_PROCESS,
+		Target = ORCHESTRATOR_PROCESS,
 		Data = message,
 		Tags = tags,
 		Action = "AddNotification",

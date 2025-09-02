@@ -1,8 +1,8 @@
 {
-  "label": "Core Concepts",
+  "label": "Core Concepts", 
   "position": 3,
   "link": {
     "type": "generated-index",
-    "description": "2-3 sentence intro"
+    "description": "Understanding the fundamental building blocks of the Consultify platform. Learn about the core entities that power multilingual telemedicine consultations on AO."
   }
 }

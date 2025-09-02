@@ -1,0 +1,161 @@
+CONSULTIFY AO HANDLER ARCHITECTURE TECHNICAL DOCUMENTATION
+
+OVERVIEW
+
+The Consultify AO system implements a decentralized telemedicine platform using the AO Operating System. The system consists of five core process: babel.lua (translation service), consultation.lua (consultation management), pharmacist.lua (prescription management), orchestrator.lua (Orchestrator), and triage.lua (medical triage agent). Each process operates as an independent actor within the AO ecosystem, communicating through message passing and handler functions.
+
+HANDLER ARCHITECTURE PATTERNS
+
+
+Every handler implements standardized validation patterns:
+1. Setup state verification using hasSetup() function
+2. Permission validation using hasPermissions() function with sender and allowed participants lists
+3. Input validation for required tags and data
+4. Error handling with standardized reply messages
+
+
+BABEL TRANSLATION SERVICE HANDLER
+
+The babel.lua process handles translation services using AI inference through the APUS router. Three core handlers manage the translation workflow:
+
+Setup Handler: Initializes the process with APUS_ROUTER configuration. Validates owner permissions and sets HAS_SETUP state flag. Stores routing information for subsequent translation requests.
+
+ProcessBabelResponse Handler: Accepts translation requests containing source content, target language, source language, and consultation metadata. Creates tracking records with unique timestamp-based IDs. Generates structured prompts using generateBabelPrompt() function which embeds translation instructions, supported language codes, and source content in a standardized format. Forwards requests to APUS_ROUTER with Infer action.
+
+AcceptInfer Handler: Processes translation responses from the AI inference system. Validates X-Reference tracking IDs against stored tracking data. Parses JSON-wrapped responses using parse_json_wrapped() function which strips markdown code block wrappers. Validates translated content presence and forwards completed translations to the originating consultation process via AddMessage action.
+
+The tracking system maintains consultation metadata including ConsultationId, SenderID, language preferences, timestamps, and attestation data for audit purposes.
+
+CONSULTATION MANAGEMENT HANDLERS
+
+The consultation.lua process orchestrates consultation sessions between patients and doctors. The process maintains consultation state, message history, and participant management.
+
+Core state objects include Consultation table storing patient_id, doctor_id, state (TRIAGE/DOCTOR/PRESCRIPTION), creation timestamp, and language preferences. Messages array stores complete conversation history with sender identification, content in multiple languages, and attestation records.
+
+Setup Handler: Configures process dependencies including ORCHESTRATOR_PROCESS, TRIAGE_PROCESS, and BABEL_PROCESS identifiers. Validates owner permissions and prevents duplicate initialization.
+
+CreateConsultation Handler: Initializes new consultation sessions from orchestrator requests. Sets patient_id, creation timestamp, and language preferences. Broadcasts initialization notifications to participants via BroadcastToParticipants() function.
+
+UpdateConsultationState Handler: Manages state transitions between TRIAGE, DOCTOR, and PRESCRIPTION phases. Validates state change permissions from triage process or assigned doctor. Broadcasts state change notifications to participants.
+
+AddMessage Handler: Accepts message additions from multiple sources including orchestrator, triage agent, babel service, and consultation participants. Stores complete message records with multilingual content, sender identification, timestamps, and cryptographic attestations.
+
+UpdateDoctor Handler: Assigns doctors to consultations and transitions state to DOCTOR phase. Updates consultation participant list and broadcasts assignment notifications.
+
+MessageListener Handler: Central message processing handler accepting messages from consultation participants. Determines sender role (patient/doctor) and language preferences. Routes triage-phase messages to TRIAGE_PROCESS with conversation history. Routes doctor-phase messages to BABEL_PROCESS for translation. Maintains message history with original and translated content.
+
+The message routing logic implements different flows based on consultation state:
+- TRIAGE state: Messages sent to triage agent with complete conversation history
+- DOCTOR state: Messages sent to babel service for translation
+- PRESCRIPTION state: Consultation concluded, no further message processing
+
+GetMessages and GetConsultationDetails handlers provide participant access to conversation history and consultation metadata respectively, with permission validation ensuring only active participants can access data.
+
+PHARMACIST PRESCRIPTION HANDLERS
+
+The pharmacist.lua process manages prescription lifecycle including creation, scheduling, and automated reminders. The system maintains prescriptions in a global table with patient associations and scheduling metadata.
+
+Setup Handler: Configures ORCHESTRATOR_PROCESS for notification routing. Unlike other processes, pharmacist setup allows universal permissions for setup operations.
+
+AddPrescription Handler: Creates prescription records from doctor submissions. Stores patient_id, consultation_id, drug_name, frequency (doses per day), start/end timestamps, and patient language preferences. Prescription records include scheduling metadata for automated reminder calculations.
+
+SendReminder Handler: Implements automated medication reminder logic. Iterates through active prescriptions checking current timestamp against prescription validity periods. Calculates reminder schedules based on frequency values where frequency represents doses per day (1=daily, 2=twice daily, etc.). 
+
+The reminder algorithm initializes nextReminderTimestamp to prescription start time, then calculates interval periods as (24 hours / frequency). When current time exceeds nextReminderTimestamp, the system generates localized notifications using getMedicationNotification() function supporting eight languages with fallback to English.
+
+Notification generation includes prescription metadata (drug name, consultation ID, frequency, timestamp) formatted as JSON metadata. The notifyUser() function sends notifications through the orchestrator process with structured recipient, message, and metadata tags.
+
+GetPrescriptions Handler: Retrieves patient-specific prescription history using getPrescriptionsByPatient() filter function. Returns prescription arrays as JSON responses with error handling for empty results.
+
+The multilingual notification system implements a translations table mapping language codes to localized message templates, ensuring medication reminders appear in patient-preferred languages.
+
+ORCHESTRATOR HANDLERS
+
+The orchestrator.lua process serves as the central orchestrator managing user registration, consultation creation, doctor assignment, payment processing, and system-wide notifications. This process maintains the most complex state management including user registries, consultation tracking, payment balances, and notification queues.
+
+State Management:
+- Doctors table: doctor registration data with specialty, language preferences, stake amounts, registration dates
+- Patients table: patient profiles with language preferences and consultation history
+- Payments table: USDA token balance tracking per user
+- Notifications table: user-specific notification queues
+- PatientConsultations and DoctorConsultations: consultation participation tracking
+- ConsultationsIndexed: consultation metadata by consultation ID
+
+User Registration Handlers implement symmetric registration/unregistration patterns:
+
+RegisterPatient/RegisterDoctor Handlers: Create user profiles with language preferences and specialty information (doctors). Prevent duplicate registrations and store registration timestamps. Doctor registration requires subsequent staking operations for activation.
+
+UnregisterPatient/UnregisterDoctor Handlers: Remove user profiles with stake return logic for doctors. Doctor unregistration triggers automatic USDA stake refunds via token transfer operations.
+
+Consultation Management:
+
+Create Handler: Implements consultation spawning using ao.spawn() with module replication. Validates patient payment balances against CONSULTATION_FEE constant. Deducts fees and creates consultation process instances. Updates patient consultation tracking and indexed consultation records.
+
+The consultation creation process currently uses hardcoded child process IDs (placeholder implementation) but includes framework for dynamic spawning with Authority configuration.
+
+Doctor Assignment System:
+
+AssignDoctor Handler: Implements weighted random doctor selection based on stake amounts. Uses getDoctorsBySpecialty() function to filter doctors by specialty type with minimum stake requirements. Falls back to all qualified doctors if specialty-specific doctors unavailable.
+
+The selection algorithm calculates total stake across eligible doctors, generates entropy-based random values, and selects doctors using cumulative stake distributions. Higher stake amounts increase selection probability proportionally.
+
+Selected doctors receive consultation assignments with triage summaries and patient language information via notification system. Assignment updates doctor consultation tracking and sends confirmation responses.
+
+Payment Processing:
+
+StakeUSDA Handler: Manages doctor stake operations from protocol balance pools. Validates doctor registration and sufficient protocol balances. Transfers amounts from payment pools to doctor stake records with confirmation messaging.
+
+AcceptUSDA Handler: Processes USDA token deposits via Credit-Notice action filtering. Updates payment balances and sends payment confirmation responses. Implements automatic balance tracking for protocol fee management.
+
+WithdrawUSDA Handler: Processes balance withdrawals with complete balance transfers to user wallets. Resets payment balances and triggers token transfer operations via USDA token contract.
+
+Notification System:
+
+AddNotification Handler: Accepts notification requests from system processes and builds user-specific notification queues. Supports arbitrary JSON metadata for rich notification content.
+
+GetUserNotifications Handler: Retrieves user notification arrays with error handling for empty queues. Enables frontend polling for real-time notification updates.
+
+Token Economy:
+
+RequestTokens Handler: Implements faucet functionality for demonstration purposes. Provides fixed DROP_SIZE token amounts (50 USDA) per user with single-use restrictions tracked in Drops table.
+
+InstantiateUSDA Handler: Owner-only configuration for USDA token contract integration. Sets token contract address for payment processing operations.
+
+The economic model implements consultation fees, protocol fees, and stake-based doctor selection with automated payment routing and balance management.
+
+TRIAGE MEDICAL AGENT HANDLERS
+
+The triage.lua process implements an AI-powered medical triage system that conducts preliminary patient assessments and determines appropriate specialist assignments. The system uses structured prompts and conversation management to guide triage interactions.
+
+Setup Handler: Configures APUS_ROUTER for AI inference and ORCHESTRATOR_PROCESS for doctor assignment requests. Prevents duplicate initialization and validates configuration parameters.
+
+ProcessTriageResponse Handler: Accepts triage requests containing consultation metadata, participant languages, and complete message history. Creates tracking records with consultation context and generates structured prompts using buildPrompt() function.
+
+The prompt generation system embeds comprehensive triage instructions including:
+- Available doctor specialties (13 specializations from General Medicine to Urology)
+- Interaction guidelines limiting to 2-4 questions maximum
+- Response format specifications requiring JSON-wrapped outputs
+- Decision criteria for question generation vs doctor selection
+
+Prompts include complete conversation history as context, enabling the AI agent to maintain conversation continuity and make informed triage decisions based on patient responses.
+
+AcceptInfer Handler: Processes AI inference responses and implements branching logic based on triage decision type:
+
+Question Response Type: Generated when additional patient information required. Creates message records with triage agent identification, preserves language preferences, and forwards questions to consultation process via AddMessage action. Maintains conversation flow until sufficient information gathered.
+
+Select-Doctor Response Type: Generated when triage assessment complete. Extracts doctor specialty requirements and triage summaries from AI responses. Forwards doctor assignment requests to orchestrator process with specialty, summary, and language parameters.
+
+The handler includes comprehensive error handling for malformed JSON responses, missing reference tracking, and invalid response types. All operations include attestation preservation for audit trails.
+
+Doctor Assignment Integration: Upon doctor selection, the system generates patient notifications explaining assignment status and providing triage summaries. Creates standardized message formats for consultation participants and forwards assignment requests to orchestrator for doctor selection algorithms.
+
+The tracking system maintains conversation context throughout multi-turn triage interactions, enabling sophisticated medical assessment workflows with AI-powered decision making.
+
+ERROR HANDLING AND VALIDATION
+
+All handlers implement consistent error handling patterns with standardized response messages. Setup validation prevents operation on unconfigured processes. Permission validation restricts access to authorized participants. Input validation checks for required tags and data structures.
+
+JSON processing includes wrapper stripping for AI-generated responses that may include markdown code block formatting. Parse failures trigger descriptive error responses with operation context.
+
+Message routing includes comprehensive validation of target processes and required metadata. Failed routing operations include detailed error information for debugging.
+

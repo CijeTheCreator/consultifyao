@@ -3,7 +3,7 @@ local json = require("json")
 MINIMUM_DOCTOR_STAKE = 5
 CONSULTATION_FEE = 5
 PROTOCOL_FEE = 0.05
-REGISTRATION_PROCESS = ao.id
+ORCHESTRATOR_PROCESS = ao.id
 HAS_SETUP = true
 -- State tables
 Doctors = Doctors or {}
@@ -45,7 +45,7 @@ local function notifyUser(recipient, message, json_metadata)
 		JSONMetadata = json_metadata,
 	}
 	local request = {
-		Target = REGISTRATION_PROCESS,
+		Target = ORCHESTRATOR_PROCESS,
 		Action = "AddNotification",
 		Data = message,
 		Tags = tags,

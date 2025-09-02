@@ -62,10 +62,10 @@ Load the Lua code into each spawned process.
 Interact with the Setup handler on each process to initialize their configurations.
 
 **Step 6: Fund the Faucet (Optional)**
-If you plan to use the token faucet for testing, send USDA tokens to the registration process.
+If you plan to use the token faucet for testing, send USDA tokens to the Orchestrator process.
 
 ```lua
--- Send USDA tokens to the registration process for faucet functionality
+-- Send USDA tokens to the Orchestrator process for faucet functionality
 Send({Target = "<Astro USDA process>", Action = "Transfer", Quantity = "1000", Recipient = "<Orchestrator Process ID>"})
 ```
 
@@ -94,7 +94,7 @@ NEXT_PUBLIC_ENVIRONMENT=DEVELOPMENT
 # Message polling rate in milliseconds (how often to check for new messages)
 NEXT_PUBLIC_MESSAGE_POLLING_RATE=1000
 
-# Your registration process ID (main orchestrator)
+# Your Orchestrator process ID (main orchestrator)
 NEXT_PUBLIC_ORCHESTRATOR_PROCESS=your-registration-process-id
 
 # USDA token contract process ID
@@ -110,7 +110,7 @@ NEXT_PUBLIC_TRIAGE_PROCESS=your-triage-process-id
 **Environment Variable Explanations:**
 - `NEXT_PUBLIC_ENVIRONMENT`: Set to "DEVELOPMENT" for local testing or "PRODUCTION" for live deployment
 - `NEXT_PUBLIC_MESSAGE_POLLING_RATE`: Controls how frequently the UI checks for new messages (1000ms = 1 second)
-- `NEXT_PUBLIC_ORCHESTRATOR_PROCESS`: The main registration process that handles user management and consultation creation
+- `NEXT_PUBLIC_ORCHESTRATOR_PROCESS`: The main Orchestrator process that handles user management and consultation creation
 - `NEXT_PUBLIC_USDA_PROCESS`: The USDA token contract for handling payments
 - `NEXT_PUBLIC_PHARMACIST_PROCESS`: Manages prescriptions and medication reminders
 - `NEXT_PUBLIC_TRIAGE_PROCESS`: AI triage system for initial patient assessment
