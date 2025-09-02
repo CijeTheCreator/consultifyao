@@ -2,6 +2,8 @@
 
 A decentralized telemedicine platform built on Arweave/AO that connects patients with medical professionals across language barriers through AI-powered triage and real-time translation.
 
+You can try it out at [ConsultifyAO](https://consultifyao.vercel.app)
+
 ## Features
 
 - **AI-Powered Triage**: Automated initial assessment to match patients with appropriate specialists
@@ -91,4 +93,4 @@ Visit the ConsultifyAO platform and follow the quickstart guide to begin your de
 
 ## Documentation
 
-For comprehensive documentation, including detailed API references, full process specifications, and advanced usage guides, visit our [documentation website](https://docs.consultifyao.com) (placeholder link).
+For comprehensive documentation, including detailed API references, full process specifications, and advanced usage guides, visit our [Documentation website](consultifyao-docs.vercel.app)
