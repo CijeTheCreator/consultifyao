@@ -3,7 +3,7 @@ sidebar_position: 5
 ---
 
 # Pharmacist Process
-`Process ID: {placeholder}`
+`Process ID: xf2tY12QQY5Ney0kzfvtxUQZYhP_a80z9RFGdl1k4bM`
 
 The pharmacist process manages prescription tracking and automated medication reminders. It stores prescription data and sends timely notifications to patients based on dosage schedules in multiple languages.
 
@@ -16,7 +16,7 @@ Initializes the pharmacist process with the orchestrator process for notificatio
 
 ```lua
 ao.send({
-  Target = "{PHARMACIST_PROCESS_ID}",
+  Target = "xf2tY12QQY5Ney0kzfvtxUQZYhP_a80z9RFGdl1k4bM",
   Action = "Setup",
   Tags = {
     ORCHESTRATOR_PROCESS = "orchestrator_process_id"
@@ -39,7 +39,7 @@ Adds a new prescription with dosage schedule and patient information.
 
 ```lua
 ao.send({
-  Target = "{PHARMACIST_PROCESS_ID}",
+  Target = "xf2tY12QQY5Ney0kzfvtxUQZYhP_a80z9RFGdl1k4bM",
   Action = "AddPrescription",
   Tags = {
     PatientID = "patient_id",
@@ -62,7 +62,7 @@ Processes prescription schedules and sends medication reminders to patients when
 
 ```lua
 ao.send({
-  Target = "{PHARMACIST_PROCESS_ID}",
+  Target = "xf2tY12QQY5Ney0kzfvtxUQZYhP_a80z9RFGdl1k4bM",
   Action = "SendReminder"
 })
 ```
@@ -76,7 +76,7 @@ Retrieves all prescriptions for the requesting patient.
 
 ```lua
 ao.send({
-  Target = "{PHARMACIST_PROCESS_ID}",
+  Target = "xf2tY12QQY5Ney0kzfvtxUQZYhP_a80z9RFGdl1k4bM",
   Action = "GetPrescriptions"
 })
 ```

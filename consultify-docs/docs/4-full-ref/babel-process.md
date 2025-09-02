@@ -3,7 +3,7 @@ sidebar_position: 4
 ---
 
 # Babel Process
-`Process ID: {placeholder}`
+`Process ID: mgFiTRfiX32cNdGUKC4FQ_OO6p4dCcdedC9eAI8zk1o`
 
 The babel process provides AI-powered translation services for medical consultations. It supports 8 languages and ensures accurate medical communication between patients and doctors who speak different languages.
 
@@ -16,7 +16,7 @@ Initializes the babel process with the AI inference router.
 
 ```lua
 ao.send({
-  Target = "{BABEL_PROCESS_ID}",
+  Target = "mgFiTRfiX32cNdGUKC4FQ_OO6p4dCcdedC9eAI8zk1o",
   Action = "Setup",
   Tags = {
     APUS_ROUTER = "ai_router_process_id"
@@ -37,7 +37,7 @@ Initiates translation request for medical consultation messages.
 
 ```lua
 ao.send({
-  Target = "{BABEL_PROCESS_ID}",
+  Target = "mgFiTRfiX32cNdGUKC4FQ_OO6p4dCcdedC9eAI8zk1o",
   Action = "ProcessBabelResponse",
   Tags = {
     ConsultationID = "consultation_process_id",
@@ -58,7 +58,7 @@ Processes AI translation responses and forwards translated content to the consul
 
 ```lua
 ao.send({
-  Target = "{BABEL_PROCESS_ID}",
+  Target = "mgFiTRfiX32cNdGUKC4FQ_OO6p4dCcdedC9eAI8zk1o",
   Action = "Infer-Response",
   Data = '{"attestation": "proof", "result": "{\\"target-language\\": \\"es\\", \\"target-content\\": \\"He estado experimentando dolores de cabeza\\"}"}',
   Tags = {

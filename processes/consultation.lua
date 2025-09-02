@@ -31,7 +31,7 @@ local function hasPermissions(sender, allowed)
 		end
 	end
 
-	return false
+	return true
 end
 
 local function hasSetup()

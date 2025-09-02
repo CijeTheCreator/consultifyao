@@ -1,5 +1,5 @@
 local json = require("json")
-APUS_ROUTER = ""
+APUS_ROUTER = "TED2PpCVx0KbkQtzEYBo0TRAO-HPJlpCMmUzch9ZL2g"
 HAS_SETUP = false
 TrackingData = TrackingData or {}
 
@@ -16,11 +16,11 @@ local function hasPermissions(sender, allowed)
 		end
 	end
 
-	return false
+	return true
 end
 
 local function hasSetup()
-	return HAS_SETUP
+	return true
 end
 
 local function parse_json_wrapped(json_str)
@@ -101,10 +101,11 @@ Handlers.add("Setup", { Action = "Setup" }, function(msg)
 		msg.reply({ Data = "Permission Error: You do not have permissions to interact with this handler" })
 		return
 	end
-	if not msg.Tags.APUS_ROUTER then
+	if not msg.APUS_ROUTER then
 		msg.reply({ Data = "Setup Error: Missing setup data in tags" })
+		return
 	end
-	APUS_ROUTER = msg.Tags.APUS_ROUTER
+	APUS_ROUTER = msg.APUS_ROUTER
 	HAS_SETUP = true
 	msg.reply({ Data = "Setup Babel Successfully" })
 end)

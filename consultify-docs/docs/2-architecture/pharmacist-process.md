@@ -4,7 +4,7 @@ sidebar_position: 6
 
 # Pharmacist Process
 
-`Process ID: [TBD]`
+`Process ID: xf2tY12QQY5Ney0kzfvtxUQZYhP_a80z9RFGdl1k4bM`
 
 ## Setup requirements
 The pharmacist process requires:

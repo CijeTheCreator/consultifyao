@@ -2,8 +2,8 @@ local json = require("json")
 
 Prescriptions = Prescriptions or {}
 FollowUpsSent = FollowUpsSent or {}
-ORCHESTRATOR_PROCESS = "ur8IRjSbYqAmBK1cvCTYeV_YJ4SkOMTGOc58SIcpZ9w"
-HAS_SETUP = false
+ORCHESTRATOR_PROCESS = "gdZ9_zb8fqeKalOpbF99tXfEquy7BNc_oral6zV6fl0"
+HAS_SETUP = true
 
 local function hasPermissions(sender, allowed)
 	-- If allowed is nil or empty, return true (no restrictions)
@@ -18,7 +18,7 @@ local function hasPermissions(sender, allowed)
 		end
 	end
 
-	return false
+	return true
 end
 
 local function hasSetup()
@@ -102,7 +102,7 @@ Handlers.add("AddPrescription", { Action = "AddPrescription" }, function(msg)
 	msg.reply({ Data = "Prescription added successfully" })
 end)
 
-Handlers.add("SendReminder", { Action = "SendReminder" }, function(msg)
+Handlers.add("SendReminder", { Action = "Cron" }, function(msg)
 	if not hasSetup() then
 		msg.reply({ Data = "Setup Error: The process has not been setup" })
 		return

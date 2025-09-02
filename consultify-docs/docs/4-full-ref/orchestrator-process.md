@@ -3,7 +3,7 @@ sidebar_position: 1
 ---
 
 # Orchestrator Process
-`Process ID: {placeholder}`
+`Process ID: gdZ9_zb8fqeKalOpbF99tXfEquy7BNc_oral6zV6fl0`
 
 The orchestrator process manages user registration, consultation coordination, doctor assignments, and payment processing. It serves as the central hub that coordinates interactions between patients, doctors, and other specialized processes.
 
@@ -16,10 +16,10 @@ Initializes the orchestrator process with required parameters.
 
 ```lua
 ao.send({
-  Target = "{ORCHESTRATOR_PROCESS_ID}",
+  Target = "gdZ9_zb8fqeKalOpbF99tXfEquy7BNc_oral6zV6fl0",
   Action = "Setup",
   Tags = {
-    USD_TOKEN = "token_contract_address_here"
+    USD_TOKEN = "token_process_address_here"
   }
 })
 ```
@@ -33,7 +33,7 @@ Registers a new patient in the system.
 
 ```lua
 ao.send({
-  Target = "{ORCHESTRATOR_PROCESS_ID}",
+  Target = "gdZ9_zb8fqeKalOpbF99tXfEquy7BNc_oral6zV6fl0",
   Action = "RegisterPatient",
   Tags = {
     PreferredLanguage = "en"
@@ -52,7 +52,7 @@ Registers a new doctor with specialty and stake information.
 
 ```lua
 ao.send({
-  Target = "{ORCHESTRATOR_PROCESS_ID}",
+  Target = "gdZ9_zb8fqeKalOpbF99tXfEquy7BNc_oral6zV6fl0",
   Action = "RegisterDoctor",
   Tags = {
     SpecialtyType = "General Medicine",
@@ -71,7 +71,7 @@ Initiates a new consultation session for a patient.
 
 ```lua
 ao.send({
-  Target = "{ORCHESTRATOR_PROCESS_ID}",
+  Target = "gdZ9_zb8fqeKalOpbF99tXfEquy7BNc_oral6zV6fl0",
   Action = "RequestConsultation"
 })
 ```
@@ -87,7 +87,7 @@ Assigns a doctor to an active consultation based on specialty requirements.
 
 ```lua
 ao.send({
-  Target = "{ORCHESTRATOR_PROCESS_ID}",
+  Target = "gdZ9_zb8fqeKalOpbF99tXfEquy7BNc_oral6zV6fl0",
   Action = "RequestDoctorAssignment",
   Tags = {
     ConsultationId = "consultation_process_id",
@@ -108,7 +108,7 @@ Adds a notification message for a specific user.
 
 ```lua
 ao.send({
-  Target = "{ORCHESTRATOR_PROCESS_ID}",
+  Target = "gdZ9_zb8fqeKalOpbF99tXfEquy7BNc_oral6zV6fl0",
   Action = "AddNotification",
   Data = "Your consultation has been scheduled",
   Tags = {
@@ -128,7 +128,7 @@ Retrieves all notifications for the requesting user.
 
 ```lua
 ao.send({
-  Target = "{ORCHESTRATOR_PROCESS_ID}",
+  Target = "gdZ9_zb8fqeKalOpbF99tXfEquy7BNc_oral6zV6fl0",
   Action = "GetNotifications"
 })
 ```
@@ -142,7 +142,7 @@ Retrieves consultation history for the requesting user.
 
 ```lua
 ao.send({
-  Target = "{ORCHESTRATOR_PROCESS_ID}",
+  Target = "gdZ9_zb8fqeKalOpbF99tXfEquy7BNc_oral6zV6fl0",
   Action = "GetConsultations"
 })
 ```

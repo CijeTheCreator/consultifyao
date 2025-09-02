@@ -3,7 +3,7 @@ sidebar_position: 3
 ---
 
 # Triage Process
-`Process ID: {placeholder}`
+`Process ID: L7Ze8YMkBf9lO8816ExKKELWJPKOR9DlR00M7dGX90A`
 
 The triage process uses AI to conduct medical assessments and determine appropriate doctor specialties. It asks targeted questions to understand patient symptoms and routes them to the most suitable medical professional.
 
@@ -17,7 +17,7 @@ Initializes the triage process with AI router and orchestrator process reference
 
 ```lua
 ao.send({
-  Target = "{TRIAGE_PROCESS_ID}",
+  Target = "L7Ze8YMkBf9lO8816ExKKELWJPKOR9DlR00M7dGX90A",
   Action = "Setup",
   Tags = {
     APUS_ROUTER = "ai_router_process_id",
@@ -39,7 +39,7 @@ Processes patient messages and generates AI-powered triage questions or doctor r
 
 ```lua
 ao.send({
-  Target = "{TRIAGE_PROCESS_ID}",
+  Target = "L7Ze8YMkBf9lO8816ExKKELWJPKOR9DlR00M7dGX90A",
   Action = "ProcessTriageResponse",
   Tags = {
     ConsultationID = "consultation_process_id",
@@ -60,7 +60,7 @@ Handles AI inference responses and either sends follow-up questions or assigns d
 
 ```lua
 ao.send({
-  Target = "{TRIAGE_PROCESS_ID}",
+  Target = "L7Ze8YMkBf9lO8816ExKKELWJPKOR9DlR00M7dGX90A",
   Action = "Infer-Response",
   Data = '{"attestation": "proof", "result": "{\\"response-type\\": \\"question\\", \\"question\\": \\"When did the pain start?\\"}"}',
   Tags = {

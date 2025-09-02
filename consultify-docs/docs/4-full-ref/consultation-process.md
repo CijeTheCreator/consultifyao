@@ -3,7 +3,6 @@ sidebar_position: 2
 ---
 
 # Consultation Process
-`Process ID: {placeholder}`
 
 The consultation process manages individual medical consultations between patients and doctors. It handles message routing, state transitions, and coordination with translation and triage services.
 

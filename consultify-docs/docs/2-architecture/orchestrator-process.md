@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Orchestrator Process
 
-`Process ID: [TBD]`
+`Process ID: gdZ9_zb8fqeKalOpbF99tXfEquy7BNc_oral6zV6fl0`
 
 ## Setup requirements
 The orchestrator process requires:
